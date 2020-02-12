@@ -7,40 +7,26 @@ class Signup extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "",
-      password: "",
-      confirmPassword: "",
+      fields: {
+        email: "",
+        password: "",
+        confirmPassword: ""
+      },
       hasError: false
     };
 
     this.handleSignup = this.handleSignup.bind(this);
-    this.handleEmailChange = this.handleEmailChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    this.handleConfirmPasswordChange = this.handleConfirmPasswordChange.bind(
-      this
-    );
   }
 
-  handleEmailChange(event) {
-    this.setState({
-      email: event.target.value
-    });
-  }
+  handleInputChange(field, e) {
+    let fields = this.state.fields;
+    fields[field] = e.target.value;
 
-  handlePasswordChange(event) {
-    this.setState({
-      password: event.target.value
-    });
-  }
-
-  handleConfirmPasswordChange(event) {
-    this.setState({
-      confirmPassword: event.target.value
-    });
+    this.setState({ fields });
   }
 
   validateEmail = email => {
-    var regEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    var regEx = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 
     return regEx.test(String(email).toLowerCase());
   };
@@ -52,88 +38,106 @@ class Signup extends Component {
       confirmPassword: this.confirmPassword
     }));
 
-    if (this.state.email === "" && this.state.password === "") {
+    if (this.state.fields.email === "" && this.state.fields.password === "") {
       document.getElementById("signup-alert").innerText =
         "Please enter your Credentials!";
 
-      this.state.hasError = true;
+      this.setState({
+        hasError: true
+      });
     } else {
-      if (this.state.email === "") {
+      if (this.state.fields.email === "") {
         document.getElementById("signup-alert").innerText =
           "Please enter your Email!";
 
-        this.state.hasError = true;
+        this.setState({
+          hasError: true
+        });
       } else {
-        this.validateEmail(this.state.email);
-        if (this.validateEmail !== true) {
+        this.validateEmail(this.state.fields.email);
+        if (this.hasError === true) {
           document.getElementById("signup-alert").innerText =
             "Please enter a Valid Email!";
 
-          this.state.hasError = true;
+          this.setState({
+            hasError: true
+          });
         }
 
-        if (this.state.password === "") {
+        if (this.state.fields.password === "") {
           document.getElementById("signup-alert").innerHTML =
             "Please enter your Password!";
 
-          this.state.hasError = true;
+          this.setState({
+            hasError: true
+          });
         }
 
-        if (this.state.password !== this.state.confirmPassword) {
+        if (this.state.fields.password !== this.state.fields.confirmPassword) {
           document.getElementById("signup-alert").innerHTML =
             "Password and Confirm Password do not match!";
 
-          this.state.hasError = true;
+          this.setState({
+            hasError: true
+          });
         }
       }
     }
 
-    console.log(
-      this.state.email,
-      this.state.password,
-      this.state.confirmPassword
-    );
+    if (this.state.hasError !== true) {
+      return console.log(
+        this.state.fields.email,
+        this.state.fields.password,
+        this.state.fields.confirmPassword
+      );
+    }
   }
 
   render() {
     return (
       <>
-        {(this.state.hasError = true ? <div id="signup-alert"></div> : null)}
-        <div className="signup-container">
-          <div className="signup-title">Corella</div>
-          <div className="signup-inputs">
-            <label>Email</label>
-            <input
-              name="email"
-              value={this.state.email}
-              onChange={this.handleEmailChange}
-              type="email"
-            />
-            <label>Password</label>
-            <input
-              name="password"
-              value={this.state.password}
-              onChange={this.handlePasswordChange}
-              type="password"
-            />
-            <label>Confirm Password</label>
-            <input
-              name="confirmPassword"
-              value={this.state.confirmPassword}
-              onChange={this.handleConfirmPasswordChange}
-              type="text"
-            />
+        {(this.hasError = true ? <div id="signup-alert"></div> : null)}
+        <div className="main-container">
+          <div className="signup-container">
+            <div className="signup-title">Corella</div>
+            <div className="signup">Sign Up!</div>
+            <div className="signup-inputs">
+              <label>Email</label>
+              <input
+                name="email"
+                value={this.state.fields["email"]}
+                onChange={this.handleInputChange.bind(this, "email")}
+                ref="email"
+                type="email"
+              />
+              <label>Password</label>
+              <input
+                name="password"
+                value={this.state.fields["password"]}
+                onChange={this.handleInputChange.bind(this, "password")}
+                ref="password"
+                type="password"
+              />
+              <label>Confirm Password</label>
+              <input
+                name="confirmPassword"
+                value={this.state.fields["confirmPassword"]}
+                onChange={this.handleInputChange.bind(this, "confirmPassword")}
+                ref="confirmPassword"
+                type="text"
+              />
+            </div>
+            <div>
+              <button className="signup-btn" onClick={this.handleSignup}>
+                Sign Up!
+              </button>
+            </div>
+            <h3>
+              <Link to="/" className="back-btn">
+                &larr; Back to Login
+              </Link>
+            </h3>
           </div>
-          <div>
-            <button className="signup-btn" onClick={this.handleSignup}>
-              Sign Up!
-            </button>
-          </div>
-          <h3>
-            <Link to="/" className="back-btn">
-              &larr; Back to Login
-            </Link>
-          </h3>
         </div>
       </>
     );

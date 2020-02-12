@@ -1,6 +1,5 @@
 .signup-container {
   display: flex;
-  margin: 7vh 0 0 32vw;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -37,6 +36,11 @@
   outline: none;
   border: 1px solid #142850;
   border-radius: 3px;
+}
+
+.signup {
+  font-size: 1.5em;
+  color: #142850;
 }
 
 .signup-title {
